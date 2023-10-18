@@ -68,7 +68,7 @@ function Signinpage() {
             </button>
           </form>
           <p className="text-white mt-4">
-            Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
             <a href="/signup" className="text-cyan-300">
               Sign Up
             </a>
