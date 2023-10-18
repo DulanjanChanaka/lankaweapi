@@ -25,7 +25,7 @@ function Return() {
     <div className="bg-cover h-screen relative   gradient-bg" >
     <div>
     <div className="fixed hidden lg:block top-20 right-0 p-5">
-        <button className="btn p-2 bg-cyan-500 text-white rounded-lg shadow-xl" onClick={() => document.getElementById('my_modal_4').showModal()}>Add Sell Item</button>
+        <button className="btn p-2 bg-cyan-500 text-white rounded-lg shadow-xl" onClick={() => document.getElementById('my_modal_4').showModal()}>Add Return</button>
       </div>
       <dialog id="my_modal_4" className="modal rounded-xl shadow-xl">
       
@@ -45,7 +45,7 @@ function Return() {
       </div>
 
       <div className="fixed lg:hidden bottom-0 right-0 p-5">
-        <button className="btn p-2 bg-cyan-600 text-white rounded-lg shadow-xl" onClick={() => document.getElementById('my_modal_4').showModal()}>Add Sell Item</button>
+        <button className="btn p-2 bg-cyan-600 text-white rounded-lg shadow-xl" onClick={() => document.getElementById('my_modal_4').showModal()}>Add Return</button>
       </div>
   </div>
   )

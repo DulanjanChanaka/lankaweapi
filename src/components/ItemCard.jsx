@@ -8,15 +8,15 @@ function ItemCard() {
     const [selectedPost, setSelectedPost] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const { user } = useAuthContext();
-    // const [userCountry, setUserCountry] = useState("");
+    const [userCountry, setUserCountry] = useState("");
 
-    // useEffect(() => {
-    //     // Assuming that user.country is set during authentication
-    //     if (user) {
-    //       setUserCountry(user.country);
-    //       return;
-    //     }
-    //   }, [user]);
+    useEffect(() => {
+        // Assuming that user.country is set during authentication
+        if (user) {
+          setUserCountry(user.country);
+          return;
+        }
+      }, [user]);
     useEffect(() => {
         const fetchItemPost = async () => {
             if (!user || !user.country) {
@@ -25,11 +25,10 @@ function ItemCard() {
                 return;
             }
             const country = user.country;
-    
+            console.log("my country",country)
             try {
                 const itemPostQuery = query(collection(db, 'shop'), where('userCountry', '==', country));
                 const itemPostCollection = await getDocs(itemPostQuery);
-    
                 const itemPostData = itemPostCollection.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
