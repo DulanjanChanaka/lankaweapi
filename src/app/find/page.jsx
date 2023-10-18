@@ -2,7 +2,7 @@
 import React from "react";
 import { useAuthContext} from '../../context/AuthContext'
 import { useRouter } from "next/navigation";
-function Find() {
+function Ask() {
     const { user } = useAuthContext()
     const router = useRouter()
 
@@ -13,4 +13,4 @@ function Find() {
     return (<h1>Only logged in users can view this page</h1>);
 }
 
-export default Find;
+export default Ask;

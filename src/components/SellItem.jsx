@@ -1,211 +1,251 @@
-"use client"
-import React, { useState } from 'react';
-import { db, storage } from '../../firebase/firebase';
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { addDoc, collection } from 'firebase/firestore';
+"use client";
+import React, { useEffect, useState } from "react";
+import { db, storage } from "../../firebase/firebase";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadBytesResumable,
+} from "firebase/storage";
+
+import { addDoc, collection } from "firebase/firestore";
+import { useAuthContext } from "../context/AuthContext";
 
 function SellItem() {
-    const [name, setName] = useState('');
-    const [title, setTitle] = useState(' ')
-    const [location, setLocation] = useState(' ')
-    const [description, setDescription] = useState('');
-    const [cno, setCno] = useState('');
-    const [condition, setCondition] = useState('');
-    const [price, setPrice] = useState('');
-    const [uploading, setUploading] = useState(false);
-    const [formError, setFormError] = useState('');
-    const [image, setImage] = useState(null);
-    const [imagelink, setImagelink] = useState('');
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [cno, setCno] = useState("");
+  const [condition, setCondition] = useState("");
+  const [price, setPrice] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagelink, setImagelink] = useState("");
+  const { user } = useAuthContext();
 
-    const handleImageUpload = (e) => {
-        const selectedFile = e.target.files[0];
+  const [userCountry, setUserCountry] = useState("");
+  const [userUid, setUserUid] = useState("");
 
-        if (selectedFile) {
-            const imageUrl = URL.createObjectURL(selectedFile);
-            setImage(imageUrl);
-        }
-    };
+  const handleImageUpload = (e) => {
+    
+    const selectedFile = e.target.files[0];
 
-    const uploadImage = async () => {
-        if (!image) {
-            setFormError('Please select an image before uploading.');
-            return;
-        }
+    if (selectedFile) {
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setImage(imageUrl);
+    }
+  };
 
-        setUploading(true);
+  const uploadImage = async () => {
+    if (!image) {
+      setFormError("Please select an image before uploading.");
+      return;
+    }
 
-        // Use a reference to Firebase Storage
-        const storageRef = ref(storage, '' + Date.now()); // You can adjust the path as needed
+    setUploading(true);
 
-        try {
-            const response = await fetch(image);
-            const blob = await response.blob();
+    // Use a reference to Firebase Storage
+    const storageRef = ref(storage, "" + Date.now()); // You can adjust the path as needed
 
-            // Upload the blob to the storageReference
-            await uploadBytesResumable(storageRef, blob).then(() => {
-                getDownloadURL(storageRef).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    setUploading(false);
-                    console.log('Photo uploaded!');
-                    setImagelink(downloadURL);
-                    console.log(downloadURL);
-                    console.log(imagelink)// Move this line inside the .then() block
-                });
-            });
-        } catch (error) {
-            console.error('Error uploading image: ', error);
-            setUploading(false);
-            console.log('Error uploading image', 'An error occurred while uploading the image.');
-        }
-    };
+    try {
+      const response = await fetch(image);
+      const blob = await response.blob();
 
+      // Upload the blob to the storageReference
+      await uploadBytesResumable(storageRef, blob).then(() => {
+        getDownloadURL(storageRef).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setUploading(false);
+          console.log("Photo uploaded!");
+          alert("Photo uploaded");
+          setImagelink(downloadURL);
+          console.log(downloadURL);
+          console.log(imagelink); // Move this line inside the .then() block
+        });
+      });
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+      setUploading(false);
+      console.log(
+        "Error uploading image",
+        "An error occurred while uploading the image."
+      );
+    }
+  };
+  useEffect(() => {
+    // Assuming that user.country is set during authentication
+    if (user) {
+      setUserCountry(user.country);
+    }
+  }, [user]);
 
-    const handleFormSubmit = async () => {
-        if (!image) {
-            setFormError('All fields and the image are required.');
-            return;
-        }
+  useEffect(() => {
+    // Assuming that user.country is set during authentication
+    if (user) {
+      setUserUid(user.uid);
+    }
+  }, [user]);
 
-        setFormError('');
+  const handleFormSubmit = async () => {
 
-        try {
-            const docRef = await addDoc(collection(db, 'shop'), {
-                name,
-                title,
-                description,
-                condition,
-                cno,
-                location,
-                price,
-                imagelink,
-            });
+    if (!image) {
+      setFormError("All fields and the image are required.");
+      return;
+    }
 
-            console.log('Document written with ID: ', docRef.id);
-            setName('');
-            setTitle('');
-            setDescription('normal');
-            setCondition('');
-            setCno('');
-            setLocation('');
-            setPrice('');
-            setImagelink('');
+    setFormError("");
 
+    try {
+      const mycountry =user.county
+      console.log("my country",mycountry)
+  
+     
+      const docRef = await addDoc(collection(db, "shop"), {
+        name,
+        title,
+        description,
+        condition,
+        cno,
+        location,
+        price,
+        imagelink,
+        userCountry,
+        userUid,
+        
+      });
+     
+      alert("Successful!");
+      console.log("Document written with ID: ", docRef.id);
+      setName("");
+      setTitle("");
+      setDescription("normal");
+      setCondition("");
+      setCno("");
+      setLocation("");
+      setPrice("");
+      setImagelink("");
+      alert("Successful!");
 
-            // Handle form submission or other actions as needed
-        } catch (error) {
-            console.error('Error adding document: ', error);
-        }
-    };
+      // Handle form submission or other actions as needed
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  };
 
-    return (
-        <div className=' p-3 overflow-hidden'>
-            <div>
-                <div className='  text-center font-medium mb-3'>
-                <h3 >Add Your Item</h3>
-
-                </div>
-                
-            <div className='flex flex-col mb-3'>
-                    <label>Title</label>
-                    <input
-                    className='border-b border-solid'
-                        type='text'
-                        placeholder="Enter your name"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    ></input>
-                </div>
-
-
-
-
-                <div className='flex flex-col mb-3'>
-                    <label>Name</label>
-                    <input
-                   
-                        type='text'
-                        placeholder="Enter your name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    ></input>
-                </div>
-
-               
-
-                <div className='flex flex-col mb-3'>
-                    <label>Description</label>
-                    <input
-                        type='text'
-                        placeholder="Enter Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    ></input>
-                </div>
-
-                <div className='flex flex-col mb-3'>
-                    <label>Condition</label>
-                    <input
-                        type='text'
-                        placeholder="Enter condition"
-                        value={condition}
-                        onChange={(e) => setCondition(e.target.value)}
-                    ></input>
-                </div>
-
-                <div className='flex flex-col mb-3'>
-                    <label>Location</label>
-                    <input
-                        type='text'
-                        placeholder="Your Location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                    ></input>
-                </div>
-
-                <div className='flex flex-col mb-3'>
-                    <label>Price</label>
-                    <input
-                        type='text'
-                        placeholder="Enter Title"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                    ></input>
-                </div>
-
-                <div className='flex flex-col mb-3'>
-                    <label>Contact</label>
-                    <input
-                        type='number'
-                        placeholder="Contact Nomber"
-                        value={cno}
-                        onChange={(e) => setCno(e.target.value)}
-                    ></input>
-                </div>
-                <div >
-                    <div className='flex flex-col mb-3'>
-                    <label className='pb-2'>Choose Image:</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                    />
-                    </div>
-                 
-                    <div>
-                        {image && <img src={image} style={{ width: 200, height: 200 }} />}
-                    </div>
-                    {formError && <p >{formError}</p>}
-                    {uploading && <div className="loader"></div>}
-                    <div className='flex flex-col mb-3'>
-                    <button className='p-1 mt-3 border-2 rounded-lg outline-gray-600 ' onClick={uploadImage}>Upload Image</button>
-                    <button className='p-2 bg-cyan-500 rounded-xl mt-5'onClick={handleFormSubmit}>Submit</button>
-
-                    </div>
-                    
-                </div>
-            </div>
+  return (
+    <div className=" p-3 overflow-hidden">
+      <div>
+        <div className="  text-center font-medium mb-3">
+          <h3>Add Your Item</h3>
         </div>
-    );
+
+        <div className="flex flex-col mb-3">
+          <label>Title</label>
+          <input
+            className="border-b px-2 border-solid"
+            type="text"
+            placeholder="Enter your name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Name</label>
+          <input
+            type="text"
+            className="border-b px-2 border-solid"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Description</label>
+          <input
+            type="text"
+            className="border-b px-2 border-solid"
+            placeholder="Enter Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Condition</label>
+          <input
+            type="text"
+            className="border-b px-2 border-solid"
+            placeholder="Enter condition"
+            value={condition}
+            onChange={(e) => setCondition(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Location</label>
+          <input
+            type="text"
+            className="border-b px-2 border-solid"
+            placeholder="Your Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Price</label>
+          <input
+            type="text"
+            className="border-b px-2 border-solid"
+            placeholder="Enter Title"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          ></input>
+        </div>
+
+        <div className="flex flex-col mb-3">
+          <label>Contact</label>
+          <input
+            type="number"
+            className="border-b px-2 border-solid"
+            placeholder="Contact Nomber"
+            value={cno}
+            onChange={(e) => setCno(e.target.value)}
+          ></input>
+        </div>
+        <div>
+          <div className="flex flex-col mb-3">
+            <label className="pb-2">Choose Image:</label>
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+          </div>
+
+          <div>
+            {image && <img src={image} style={{ width: 200, height: 200 }} />}
+          </div>
+          {formError && <p>{formError}</p>}
+          {uploading && <div className="loader"></div>}
+          <div className="flex flex-col mb-3">
+            <button
+              className="p-1 mt-3 border-2 rounded-lg outline-gray-600 "
+              onClick={uploadImage}
+            >
+              Upload Image
+            </button>
+            <button
+              className="p-2 bg-cyan-500 rounded-xl mt-5"
+              onClick={handleFormSubmit}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default SellItem;

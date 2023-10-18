@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, query } from 'firebase/firestore';
+import { useAuthContext } from '../context/AuthContext';
 
 function ReturnCard() {
     const [personPost, setPersonPost] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const { user } = useAuthContext();
 
     useEffect(() => {
         const fetchPersonPost = async () => {
+            if (!user || !user.country) {
+                // Handle the case where user or user.country is undefined or falsy, for example, show an error message or return early.
+                console.error('User or user country is missing or invalid');
+                return;
+            }
+            const country = user.country;
           try {
-            const personPostCollection = await getDocs(collection(db, 'return'));
-            const personPostData = personPostCollection.docs.map((doc) => {
-                const postId = doc.id
-              console.log(postId); // Log the document ID
-              return {
+            const returnPostQuery = query(collection(db, 'return'), where('userCountry', '==', country));
+            const returnPostCollection = await getDocs(returnPostQuery);
+            const returnPostData = returnPostCollection.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
-               
-              };
-            });
-            setPersonPost(personPostData);
-          } catch (error) {
-            console.error('Error fetching person posts:', error);
-          }
+            }));
+            setPersonPost(returnPostData);
+        } catch (error) {
+            console.error('Error fetching item posts:', error);
+        }
         };
         fetchPersonPost();
       }, []);

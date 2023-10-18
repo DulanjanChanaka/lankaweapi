@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore'; // Import Firebase Firestore functions (update this import based on your project setup)
 import { db } from '../../firebase/firebase';
+import { useAuthContext } from "../context/AuthContext";
 
 
 const AddReturn = ({ onClose }) => {
@@ -8,20 +9,42 @@ const AddReturn = ({ onClose }) => {
   const [location, setLocation] = useState('');
   const [date, setDate] = useState('');
   const [cno, setCno] = useState('');
+  const { user } = useAuthContext();
+
+  const [userCountry, setUserCountry] = useState("");
+  const [userUid, setUserUid] = useState("");
+
+  useEffect(() => {
+    // Assuming that user.country is set during authentication
+    if (user) {
+      setUserCountry(user.country);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Assuming that user.country is set during authentication
+    if (user) {
+      setUserUid(user.uid);
+    }
+  }, [user]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevent the form from submitting and reloading the page
 
     try {
-      
+      const mycountry =user.county
+      console.log("my country",mycountry)
       // Assuming 'db' is your Firestore database instance
       const docRef = await addDoc(collection(db, 'return'), {
         name: name,
         location: location,
         date: date,
         cno: cno,
+        userCountry,
+        userUid,
       });
 
+      alert("Successful!");
       console.log('Document written with ID: ', docRef.id);
 
       // Reset form fields
@@ -49,7 +72,7 @@ const AddReturn = ({ onClose }) => {
         placeholder="Enter your name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className='border-b border-solid'
+        className='border-b px-2 border-solid'
       />
     </div>
   
@@ -60,7 +83,7 @@ const AddReturn = ({ onClose }) => {
         placeholder="Enter city"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className='border-b border-solid'
+        className='border-b px-2 border-solid'
       />
     </div>
   
@@ -71,7 +94,7 @@ const AddReturn = ({ onClose }) => {
         placeholder="Enter contact no"
         value={cno}
         onChange={(e) => setCno(e.target.value)}
-        className='border-b border-solid'
+        className='border-b px-2 border-solid'
       />
     </div>
   

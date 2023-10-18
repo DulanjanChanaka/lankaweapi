@@ -1,39 +1,40 @@
-'use client'
-import React from "react";
+"use client";
 import signIn from "../../../firebase/auth/signin";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
 
 function Signinpage() {
-    const [email, setEmail] = React.useState('')
-    const [password, setPassword] = React.useState('')
-    const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
-    const handleForm = async (event) => {
-        event.preventDefault()
+  const handleForm = async (event) => {
+    event.preventDefault();
 
-        const { result, error } = await signIn(email, password);
+    const { result, error } = await signIn(email, password);
 
-        if (error) {
-            return console.log(error)
-        }
-
-        // else successful
-        console.log(result)
-        return router.push("/")
+    if (error) {
+      return console.log(error);
+    } else {
+      return router.push("/");
     }
-    return (
-        <div className="w-full  flex justify-center items-center">
-        <Image
-          src="/assets/bg1.jpg"
-          alt="amila"
-          width={924.45}
-          height={520}
-          className="bg-cover bg-center h-screen w-full flex items-centerl"
-        />
-        <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center  ">
-            <div className="bg-white bg-opacity-40 p-4 rounded-xl">
-            <h1 className=" text-center text-white font-bold">Login</h1>
+
+    // else successful
+    console.log(result);
+  };
+  return (
+    <div className="w-full  flex justify-center items-center">
+      <Image
+        src="/assets/bg1.jpg"
+        alt="amila"
+        width={924.45}
+        height={520}
+        className="bg-cover bg-center h-screen w-full flex items-centerl"
+      />
+      <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center  ">
+        <div className="bg-white bg-opacity-40 p-4 rounded-xl">
+          <h1 className=" text-center text-white font-bold">Login</h1>
           <form onSubmit={handleForm} className="flex flex-col gap-4">
             <label htmlFor="email">
               <p className="text-white">Email</p>
@@ -59,17 +60,23 @@ function Signinpage() {
                 className="rounded-lg px-2 py-1"
               />
             </label>
-            <button className="p-1 bg-cyan-500 rounded-2xl text-white" type="submit">Sign In</button>
+            <button
+              className="p-1 bg-cyan-500 rounded-2xl text-white"
+              type="submit"
+            >
+              Sign In
+            </button>
           </form>
           <p className="text-white mt-4">
-        Don't have an account? <a href="/signup" className="text-cyan-300">Sign Up</a>
-      </p>
-         
-
-            </div>
-          
+            Don't have an account?{" "}
+            <a href="/signup" className="text-cyan-300">
+              Sign Up
+            </a>
+          </p>
         </div>
-      </div>);
+      </div>
+    </div>
+  );
 }
 
 export default Signinpage;

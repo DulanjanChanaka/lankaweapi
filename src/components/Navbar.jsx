@@ -71,7 +71,7 @@ const Navbar = () => {
                         <Link href='/find' >
                             <li className={`ml-10 text-sm uppercase hover:border-b-2 hover:text-[#5651e5] ${activeItem === 'item2' ? 'border-black' : ''}`}
                                 style={{ borderBottomWidth: activeItem === 'item2' ? '1px' : '0px' }}
-                                onClick={() => handleItemClick('item2')}>FIND</li>
+                                onClick={() => handleItemClick('item2')}>ASK</li>
                         </Link>
 
                         <Link href='/return' >
@@ -127,7 +127,7 @@ const Navbar = () => {
                                 <li onClick={() => setNav(false)} className='py-4 text-sm'>HOME</li>
                             </Link>
                             <Link href='/find'>
-                                <li onClick={() => setNav(false)} className='py-4 text-sm'>FIND</li>
+                                <li onClick={() => setNav(false)} className='py-4 text-sm'>ASK</li>
                             </Link>
                             <Link href='/return'>
                                 <li onClick={() => setNav(false)} className='py-4 text-sm'>RETURN</li>

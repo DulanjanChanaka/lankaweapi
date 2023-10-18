@@ -1,16 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../../firebase/firebase';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, query, where } from 'firebase/firestore';
+import { useAuthContext } from '../context/AuthContext';
 
 function ItemCard() {
     const [itemPosts, setItemPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const { user } = useAuthContext();
+    // const [userCountry, setUserCountry] = useState("");
 
+    // useEffect(() => {
+    //     // Assuming that user.country is set during authentication
+    //     if (user) {
+    //       setUserCountry(user.country);
+    //       return;
+    //     }
+    //   }, [user]);
     useEffect(() => {
         const fetchItemPost = async () => {
+            if (!user || !user.country) {
+                // Handle the case where user or user.country is undefined or falsy, for example, show an error message or return early.
+                console.error('User or user country is missing or invalid');
+                return;
+            }
+            const country = user.country;
+    
             try {
-                const itemPostCollection = await getDocs(collection(db, 'shop'));
+                const itemPostQuery = query(collection(db, 'shop'), where('userCountry', '==', country));
+                const itemPostCollection = await getDocs(itemPostQuery);
+    
                 const itemPostData = itemPostCollection.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
@@ -21,11 +40,12 @@ function ItemCard() {
             }
         };
         fetchItemPost();
-    }, []);
+    }, [user]);
+    
 
     return (
         <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                 {itemPosts.map((item) => (
                     <div
                         key={item.id}
@@ -34,14 +54,14 @@ function ItemCard() {
                         <img
                             src={item.imagelink}
                             alt={item.location}
-                            className="w-full h-32 object-cover"
+                            className="w-full h-[full] object-cover"
                         />
-                        <div className="p-6">
-                            <h2 className="text-xl font-semibold">{item.title}</h2>
-                            <p className="text-gray-600 text-sm mb-3">
+                        <div className="p-3 md:p-6 sm:p-3">
+                            <h2 className="text-xl font-semibold mb-2">{item.title}</h2>
+                            <p className="text-gray-600 text-sm  mb-2">
                                 Item Location: {item.location}
                             </p>
-                            <p className="text-gray-600 text-sm mb-3">
+                            <p className="text-gray-600 text-sm mb-2">
                                 Item Condition: {item.condition}
                             </p>
                          
@@ -71,7 +91,7 @@ function ItemCard() {
                                 <img
                                     src={selectedPost.imagelink}
                                     alt={selectedPost.place}
-                                    className="w-full h-32 object-cover mb-4"
+                                    className="w-full h-[full] object-cover mb-4"
                                 />
                             )}
 
