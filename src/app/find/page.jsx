@@ -1,16 +1,28 @@
 'use client'
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuthContext} from '../../context/AuthContext'
 import { useRouter } from "next/navigation";
+import './../shop/styles.css';
 function Ask() {
     const { user } = useAuthContext()
     const router = useRouter()
 
-    React.useEffect(() => {
-        if (user == null) router.push("/signin")
-    }, [user])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+          if (user == null) router.push("/signin");
+        }, 3000);
+    
+        return () => {
+          clearTimeout(timer);
+        };
+      }, [user]);
 
-    return (<h1>Only logged in users can view this page</h1>);
+    return (
+        <div className="bg-cover h-screen relative   gradient-bg">
+             <h1 className="flex justify-center text-center pt-10 text-2xl  text-white">Coming soon</h1>
+        </div>
+   
+    );
 }
 
 export default Ask;

@@ -57,7 +57,7 @@ function ReturnCard() {
 
                             <div className="p-6">
                                 <h2 className="text-xl font-semibold">{item.date}</h2>
-                                <p className="text-gray-600 text-sm mb-3">Item Location: {item.location}</p>
+                                <p className="text-gray-600 text-sm mb-3">City: {item.location}</p>
                                 <button
                                     onClick={() => {
                                         setSelectedPost(item);

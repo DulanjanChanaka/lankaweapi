@@ -74,17 +74,17 @@ function ProfilePage() {
   };
 
   return (
-    <div className="px-5">
+    <div className="px-5 w-full h-screen">
       {user ? (
         <div>
           <h1 className="text-center text-base font-bold mb-10 bg-slate-400 px-2 py-2 rounded-2xl">
             Welcome {userName}
           </h1>
-          {userCountry && (
+          {/* {userCountry && (
             <p className="mb-10 left-0 text-center w-64 py-2 bg-amber-600 text-white rounded-2xl">
               {userCountry}
             </p>
-          )}
+          )} */}
 
           <h3 className="text-center font-bold">My Posts</h3>
 
@@ -99,7 +99,7 @@ function ProfilePage() {
 
                   <button
                     onClick={() => deleteItemPost(item.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 mt-4 rounded"
+                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 mt-4 rounded "
                   >
                     Delete
                   </button>
@@ -110,7 +110,7 @@ function ProfilePage() {
             <p className="text-center">No post here</p>
           )}
 
-          <div className="bottom-0 mb-10">
+          <div className="fixed bottom-3 left-5 ">
             <button
               className="p-2 mt-20 bg-blue-400 rounded-lg shadow-lg"
               onClick={handleSignOut}
