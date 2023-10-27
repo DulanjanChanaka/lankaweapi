@@ -61,7 +61,7 @@ function SignupPage() {
       />
       <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center  pt-[150px]">
         <div className="bg-white bg-opacity-40 p-4 rounded-xl">
-          <h1 className=" text-center text-white font-bold">Sign Up</h1>
+          <h1 className=" text-center text-white font-bold"> Sign Up</h1>
           <form onSubmit={handleForm} className="flex flex-col gap-4">
             <label htmlFor="email">
               <p className="text-white">Email</p>
