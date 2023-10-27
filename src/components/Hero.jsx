@@ -24,7 +24,7 @@ function Hero() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-80">
+        <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-80 lg:px-[100px] p-3 z-50">
           <div className="bg-white p-4 rounded-lg text-center">
             <h2 className="text-2xl font-bold mb-2">Lankawe Api Community</h2>
             <p className="mb-4">
