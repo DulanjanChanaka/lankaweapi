@@ -51,7 +51,7 @@ function SignupPage() {
     // else successful
   };
   return (
-    <div className="w-full  flex justify-center items-center">
+    <div className="w-full  flex justify-center items-center ">
       <Image
         src="/assets/bg1.jpg"
         alt="amila"
@@ -59,7 +59,7 @@ function SignupPage() {
         height={520}
         className="bg-cover bg-center h-screen w-full flex items-centerl"
       />
-      <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center  ">
+      <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center  pt-[150px]">
         <div className="bg-white bg-opacity-40 p-4 rounded-xl">
           <h1 className=" text-center text-white font-bold">Sign Up</h1>
           <form onSubmit={handleForm} className="flex flex-col gap-4">
